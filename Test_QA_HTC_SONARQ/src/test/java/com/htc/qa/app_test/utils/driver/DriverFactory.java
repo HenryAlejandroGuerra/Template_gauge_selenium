@@ -33,6 +33,7 @@ public class DriverFactory {
 
         String browser = System.getenv("BROWSER");
         System.out.println("Navegador: "+browser);
+        System.out.println("Headless-Mode: "+headless);
 
         if (browser == null) {
             if(headless){
@@ -44,7 +45,7 @@ public class DriverFactory {
             WebDriverManager.chromedriver().setup();
             return new ChromeDriver(chromeOptions);
         }
-        
+
         switch (browser){
             case "IE":
                 WebDriverManager.iedriver().version("3.141").setup();
@@ -61,6 +62,12 @@ public class DriverFactory {
                 WebDriverManager.edgedriver().setup();
                 return new EdgeDriver();
             default:
+                if(headless){
+                    chromeOptions.addArguments("--headless", "window-size=1200,600");
+                    chromeOptions.addArguments("--lang=en_US");
+                    chromeOptions.addArguments("no-sandbox");
+                    chromeOptions.addArguments("disable-setuid-sandbox");
+                }
                 WebDriverManager.chromedriver().setup();
                 return new ChromeDriver(chromeOptions);
         }
